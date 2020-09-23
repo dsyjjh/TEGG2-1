@@ -36,6 +36,14 @@ class UserProductionController extends Controller {
     async productionImg() {
         this.ctx.body = await this.ctx.service.userProduction.productionImg()
     }
+    //图片 标题,分类,名字等等  关键字搜索
+    async keydords() {
+        var keydords=this.ctx.request.query.keydords
+        var sql=`select * from where description like "%${keydords}%" or imgtitle like "%${keydords}%" or imgname like "%${keydords}%" or imgtype like "%${keydords}%"`
+        this.ctx.body = await this.app.mysql.query(sql)
+    }
+
+
 
     //用户需要收藏某个摄影图片
     async collectionProduction() {
@@ -43,7 +51,11 @@ class UserProductionController extends Controller {
         if (!this.ctx.session.userid) {
             this.ctx.body = { code: 4006, info: "用户未登录" }
         }
+        else if(!this.ctx.request.query.id){
+            this.ctx.body = { code: 4009, info: "要收藏图片的id传输错误" }
+        }
         else {
+            // console.log(this.ctx.request.query)
             this.ctx.request.query.userid=this.ctx.session.userid
             var re = await this.ctx.service.userProduction.collectionProduction(this.ctx.request.query)
             this.ctx.body = { code: 2006, info: "收藏成功" }
@@ -65,6 +77,19 @@ class UserProductionController extends Controller {
             this.ctx.body = re
         }
 
+    }
+
+    async getSelfProduction(){
+        // console.log(1111111111)
+         //如果没有登录  
+         if (!this.ctx.session.userid) {
+            this.ctx.body = { code: 4006, info: "用户未登录" }
+        }
+        else {
+            this.ctx.request.query.userid=this.ctx.session.userid
+            var re = await this.ctx.service.userProduction.getSelfProduction(this.ctx.request.query)
+            this.ctx.body = re
+        }
     }
 
 

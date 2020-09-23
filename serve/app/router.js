@@ -8,6 +8,8 @@ module.exports = app => {
   router.get('/userinfo', controller.user.userinfo);//用户信息
   router.get('/destroy', controller.user.destroy);//注销
   router.get('/username', controller.user.username);//修改昵称
+  router.post('/setUserImg', controller.user.setUserImg);//修改头像
+
   //验证码
   router.get("/verif", controller.user.verif)
   //注册
@@ -26,11 +28,20 @@ module.exports = app => {
  //获取用户所有收藏的图片
  router.get('/getcollectionProduction', controller.userProduction.getcollectionProduction);
 
+  //获取用户所有自己的作品图片
+  router.get('/getSelfProduction', controller.userProduction.getSelfProduction);
+
+
 
  //获取某个图片的所有评论
  router.get('/getallcomments', controller.comments.getallcomments);
 //对某个图片进行评论
 router.get('/setComments', controller.comments.setComments);
+
+
+//图片 标题,分类,名字等等  关键字搜索keydords
+router.get('/keydords', controller.userProduction.keydords);
+
 };
 /*
 1.验证码接口
@@ -127,8 +138,29 @@ imgtitle              摄影图片的标题
 
 
 
+6.获取用户所有自己的作品图片
 
-6.用户要收藏作品
+url:    /getSelfProduction
+请求方式:   get
+
+请求条件:用户必须已经登录
+参数:  无
+
+返回数据示例:   
+[{
+id                    摄影图片的id
+userid                摄影图片所属用户id
+description           摄影图片描述
+upimgsrc              摄影图片的网址
+imgtype               摄影图片的分类
+imgname               摄影图片的名字
+imgtitle              摄影图片的标题
+},...]
+
+
+
+
+7.用户要收藏作品
 url:    /collectionProduction
 请求方式:   get
 
@@ -141,7 +173,7 @@ id   要收藏的图片id
 { code: 2006, info: "收藏成功" }
 
 
-//7.获取用户所有收藏的图片
+8.获取用户所有收藏的图片
 url:   /getcollectionProduction
 请求方式:   get
 
@@ -153,7 +185,7 @@ url:   /getcollectionProduction
 [{id,userid,upimgsrc,description,imgtype,imgname,imgtitle}]
 
 
-8.获取当前登录用户信息
+9.获取当前登录用户信息
 url:   /userinfo
 请求方式:   get
 请求条件:用户必须已经登录
@@ -161,12 +193,12 @@ url:   /userinfo
 返回数据示例:得到以后自己打印
 
 
-9.退出登录
+10.退出登录
 url:   /destroy
 请求方式:   get
 参数等等---无
 
-10.修改昵称
+11.修改昵称
 url:  /username
 请求方式:   get
 参数:
@@ -178,7 +210,7 @@ username  新的用户昵称
 
 
 
-11. 获取某个图片的所有评论
+12. 获取某个图片的所有评论
 url:   /getallcomments
 请求方式:   get
 请求条件:用户不用登录也可以
@@ -188,7 +220,7 @@ imgid   图片的id
 
 
 
-12.对某个图片进行评论
+13.对某个图片进行评论
 url:    /setComments
 请求方式:   get
 请求条件:用户必须已经登录
@@ -196,5 +228,31 @@ url:    /setComments
 imgid   图片的id  
 comtext  评论的内容
 返回数据示例:得到以后自己打印
+
+
+
+
+14. 修改头像
+url:    /setUserImg
+请求方式:   post
+请求条件:用户必须已经登录
+参数:  
+img   新的头像图片文件  
+返回数据示例:
+{ code: 4006, info: "未登录" }
+{code: 20010, info: "修改成功",imgurl:imgurl}   
+{code: 4009, info: "未传头像"}    
+
+
+
+
+//15.图片 标题,分类,名字等等  关键字搜索
+url:    /keydords
+请求方式:   get
+请求条件:用户不用登录也可以
+参数:  
+keydords   关键字
+返回数据示例:得到以后自己打印
+
 
 */
